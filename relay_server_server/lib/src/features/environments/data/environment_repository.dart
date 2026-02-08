@@ -1,8 +1,10 @@
 import 'package:serverpod/serverpod.dart';
 
+import 'package:relay_server_server/src/features/environments/data/in_memory_environment_store.dart';
 import 'package:relay_server_server/src/generated/protocol.dart';
 
 /// CRUD for environments per user. Used by [EnvironmentsEndpoint].
+/// Uses in-memory store when [InMemoryEnvironmentStore.useInMemory] is true (no Postgres).
 abstract final class EnvironmentRepository {
   EnvironmentRepository._();
 
@@ -10,6 +12,9 @@ abstract final class EnvironmentRepository {
     Session session,
     int userId,
   ) async {
+    if (InMemoryEnvironmentStore.useInMemory) {
+      return InMemoryEnvironmentStore.listByUserId(userId);
+    }
     final rows = await StoredEnvironment.db.find(
       session,
       where: (t) => t.userId.equals(userId),
@@ -24,6 +29,9 @@ abstract final class EnvironmentRepository {
     int userId,
     String name,
   ) async {
+    if (InMemoryEnvironmentStore.useInMemory) {
+      return InMemoryEnvironmentStore.getByName(userId, name);
+    }
     final row = await StoredEnvironment.db.findFirstRow(
       session,
       where: (t) => t.userId.equals(userId) & t.name.equals(name),
@@ -37,6 +45,10 @@ abstract final class EnvironmentRepository {
     int userId,
     EnvironmentModel environment,
   ) async {
+    if (InMemoryEnvironmentStore.useInMemory) {
+      await InMemoryEnvironmentStore.create(userId, environment);
+      return;
+    }
     await StoredEnvironment.db.insertRow(
       session,
       StoredEnvironment(
@@ -52,6 +64,10 @@ abstract final class EnvironmentRepository {
     int userId,
     EnvironmentModel environment,
   ) async {
+    if (InMemoryEnvironmentStore.useInMemory) {
+      await InMemoryEnvironmentStore.update(userId, environment);
+      return;
+    }
     final row = await StoredEnvironment.db.findFirstRow(
       session,
       where: (t) =>
@@ -67,6 +83,10 @@ abstract final class EnvironmentRepository {
     int userId,
     String name,
   ) async {
+    if (InMemoryEnvironmentStore.useInMemory) {
+      await InMemoryEnvironmentStore.delete(userId, name);
+      return;
+    }
     final row = await StoredEnvironment.db.findFirstRow(
       session,
       where: (t) => t.userId.equals(userId) & t.name.equals(name),

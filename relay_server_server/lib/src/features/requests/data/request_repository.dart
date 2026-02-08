@@ -1,8 +1,10 @@
 import 'package:serverpod/serverpod.dart';
 
+import 'package:relay_server_server/src/features/requests/data/in_memory_request_store.dart';
 import 'package:relay_server_server/src/generated/protocol.dart';
 
 /// CRUD for requests per user (scoped by collection). Used by [RequestsEndpoint].
+/// Uses in-memory store when [InMemoryRequestStore.useInMemory] is true (no Postgres).
 abstract final class RequestRepository {
   RequestRepository._();
 
@@ -11,6 +13,9 @@ abstract final class RequestRepository {
     int userId,
     String collectionId,
   ) async {
+    if (InMemoryRequestStore.useInMemory) {
+      return InMemoryRequestStore.listByCollection(userId, collectionId);
+    }
     final rows = await StoredRequest.db.find(
       session,
       where: (t) =>
@@ -24,6 +29,9 @@ abstract final class RequestRepository {
     int userId,
     String requestId,
   ) async {
+    if (InMemoryRequestStore.useInMemory) {
+      return InMemoryRequestStore.getById(userId, requestId);
+    }
     final row = await StoredRequest.db.findFirstRow(
       session,
       where: (t) =>
@@ -37,6 +45,10 @@ abstract final class RequestRepository {
     int userId,
     ApiRequestModel request,
   ) async {
+    if (InMemoryRequestStore.useInMemory) {
+      await InMemoryRequestStore.create(userId, request);
+      return;
+    }
     await StoredRequest.db.insertRow(
       session,
       StoredRequest(
@@ -55,6 +67,10 @@ abstract final class RequestRepository {
     int userId,
     ApiRequestModel request,
   ) async {
+    if (InMemoryRequestStore.useInMemory) {
+      await InMemoryRequestStore.update(userId, request);
+      return;
+    }
     final row = await StoredRequest.db.findFirstRow(
       session,
       where: (t) =>
@@ -72,6 +88,10 @@ abstract final class RequestRepository {
     int userId,
     String requestId,
   ) async {
+    if (InMemoryRequestStore.useInMemory) {
+      await InMemoryRequestStore.delete(userId, requestId);
+      return;
+    }
     final row = await StoredRequest.db.findFirstRow(
       session,
       where: (t) =>

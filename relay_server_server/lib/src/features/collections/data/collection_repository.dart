@@ -1,8 +1,10 @@
 import 'package:serverpod/serverpod.dart';
 
+import 'package:relay_server_server/src/features/collections/data/in_memory_collection_store.dart';
 import 'package:relay_server_server/src/generated/protocol.dart';
 
 /// CRUD for collections per user. Used by [CollectionsEndpoint].
+/// Uses in-memory store when [InMemoryCollectionStore.useInMemory] is true (no Postgres).
 abstract final class CollectionRepository {
   CollectionRepository._();
 
@@ -10,6 +12,9 @@ abstract final class CollectionRepository {
     Session session,
     int userId,
   ) async {
+    if (InMemoryCollectionStore.useInMemory) {
+      return InMemoryCollectionStore.listByUserId(userId);
+    }
     final rows = await StoredCollection.db.find(
       session,
       where: (t) => t.userId.equals(userId),
@@ -30,6 +35,9 @@ abstract final class CollectionRepository {
     int userId,
     String collectionId,
   ) async {
+    if (InMemoryCollectionStore.useInMemory) {
+      return InMemoryCollectionStore.getById(userId, collectionId);
+    }
     final row = await StoredCollection.db.findFirstRow(
       session,
       where: (t) =>
@@ -50,6 +58,10 @@ abstract final class CollectionRepository {
     int userId,
     CollectionModel collection,
   ) async {
+    if (InMemoryCollectionStore.useInMemory) {
+      await InMemoryCollectionStore.create(userId, collection);
+      return;
+    }
     await StoredCollection.db.insertRow(
       session,
       StoredCollection(
@@ -68,6 +80,10 @@ abstract final class CollectionRepository {
     int userId,
     CollectionModel collection,
   ) async {
+    if (InMemoryCollectionStore.useInMemory) {
+      await InMemoryCollectionStore.update(userId, collection);
+      return;
+    }
     final row = await StoredCollection.db.findFirstRow(
       session,
       where: (t) =>
@@ -86,6 +102,10 @@ abstract final class CollectionRepository {
     int userId,
     String collectionId,
   ) async {
+    if (InMemoryCollectionStore.useInMemory) {
+      await InMemoryCollectionStore.delete(userId, collectionId);
+      return;
+    }
     final row = await StoredCollection.db.findFirstRow(
       session,
       where: (t) =>

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/app_logo.png" alt="Röle Logo" width="120" height="120">
+</p>
+
 <h1 align="center">Röle Serverpod</h1>
 
 <p align="center">

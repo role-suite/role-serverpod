@@ -3,18 +3,14 @@ FROM dart:3.8.0 AS build
 WORKDIR /app
 COPY . .
 
-# Install dependencies and compile the server executable
+# Install dependencies, generate Serverpod code, and compile the server executable
 RUN dart pub get
+RUN dart pub global activate serverpod_cli 3.4.3
+RUN export PATH="$PATH:$HOME/.pub-cache/bin" && serverpod generate
 RUN dart compile exe bin/main.dart -o bin/server
 
 # Final stage
 FROM alpine:latest
-
-# Environment variables
-ENV runmode=production
-ENV serverid=default
-ENV logging=normal
-ENV role=monolith
 
 # Copy runtime dependencies
 COPY --from=build /runtime/ /
@@ -36,4 +32,5 @@ EXPOSE 8081
 EXPOSE 8082
 
 # Define the entrypoint command
-ENTRYPOINT ./server --mode=$runmode --server-id=$serverid --logging=$logging --role=$role
+ENTRYPOINT ["./server"]
+CMD ["--mode=production", "--server-id=default", "--logging=normal", "--role=monolith"]

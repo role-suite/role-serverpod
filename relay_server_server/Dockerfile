@@ -5,6 +5,7 @@ COPY . .
 
 # Install dependencies and compile the server executable
 RUN dart pub get
+RUN mkdir -p web migrations
 RUN dart compile exe bin/main.dart -o bin/server
 
 # Final stage

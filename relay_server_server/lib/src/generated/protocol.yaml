@@ -1,0 +1,56 @@
+auth:
+  - register:
+  - login:
+  - refresh:
+  - logout:
+  - me:
+collections:
+  - list:
+  - get:
+  - create:
+  - update:
+  - remove:
+  - listFolders:
+  - createFolder:
+  - updateFolder:
+  - removeFolder:
+  - listEndpoints:
+  - createEndpoint:
+  - updateEndpoint:
+  - removeEndpoint:
+  - listEndpointExamples:
+  - createEndpointExample:
+  - updateEndpointExample:
+  - removeEndpointExample:
+environments:
+  - list:
+  - get:
+  - create:
+  - update:
+  - remove:
+  - listVariables:
+  - createVariable:
+  - updateVariable:
+  - removeVariable:
+importExport:
+  - listJobs:
+  - getJobById:
+  - createExport:
+  - createImport:
+runs:
+  - list:
+  - get:
+  - create:
+  - cancel:
+workspaces:
+  - list:
+  - get:
+  - create:
+  - listMembers:
+  - createInvitation:
+  - acceptInvitation:
+  - updateMemberRole:
+  - removeMember:
+  - leave:
+  - convertToTeam:
+  - listUpdates:

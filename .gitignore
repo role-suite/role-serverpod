@@ -59,8 +59,6 @@ build/
 # -----------------------------------------------------------------------------
 # Serverpod server (relay_server_server)
 # -----------------------------------------------------------------------------
-# Generated (run `serverpod generate` from relay_server_server to regenerate)
-relay_server_server/lib/src/generated/
 # Migrations (run `serverpod create-migration` to regenerate)
 relay_server_server/migrations/
 # Secrets – never commit

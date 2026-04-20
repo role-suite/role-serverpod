@@ -5,9 +5,6 @@
 # Conventional directory for build outputs
 build/
 
-# Serverpod generated (run `serverpod generate` to regenerate)
-lib/src/generated/
-
 # Migrations (run `serverpod create-migration` to regenerate)
 migrations/
 

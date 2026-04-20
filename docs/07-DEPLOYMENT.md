@@ -61,3 +61,34 @@ dart bin/main.dart --apply-migrations
 - [ ] Migrations are applied as part of deployment.
 - [ ] Container runs as non-root user where possible.
 - [ ] HTTPS is enforced at edge/reverse-proxy level.
+
+## GitHub CI/CD
+
+This repository includes two GitHub Actions workflows:
+
+- `.github/workflows/ci.yml`: runs on pull requests and pushes to `main`; verifies formatting, analysis, tests, Serverpod code generation drift, and Docker build health.
+- `.github/workflows/cd.yml`: runs on pushes to `main`, version tags (`v*.*.*`), or manual trigger; builds and publishes Docker images to GitHub Container Registry (`ghcr.io`).
+
+Published image name:
+
+```text
+ghcr.io/<github-org-or-user>/role-serverpod
+```
+
+Tag strategy:
+
+- `latest` on default branch pushes
+- branch name tags (for branch pushes)
+- semantic version tags when pushing `v*.*.*`
+- commit SHA tag for traceability
+
+### Required Repository Permissions
+
+- Actions must be enabled.
+- `GITHUB_TOKEN` needs package write access (default in workflow permissions).
+
+### Pulling a Published Image
+
+```bash
+docker pull ghcr.io/<github-org-or-user>/role-serverpod:latest
+```

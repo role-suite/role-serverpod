@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Format, Analyze, Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: relay_server_server
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.8.0
+
+      - name: Cache Dart dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            relay_server_server/.dart_tool
+          key: ${{ runner.os }}-pub-${{ hashFiles('relay_server_server/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed bin lib test
+
+      - name: Run static analysis
+        run: dart analyze
+
+      - name: Run tests
+        run: dart test
+
+      - name: Install Serverpod CLI
+        run: dart pub global activate serverpod_cli 3.4.3
+
+      - name: Verify generated files are up to date
+        run: |
+          export PATH="$PATH:$HOME/.pub-cache/bin"
+          serverpod generate
+          git diff --exit-code
+
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: relay_server_server
+          file: relay_server_server/Dockerfile
+          push: false

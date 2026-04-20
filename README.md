@@ -99,6 +99,11 @@ dart bin/main.dart --apply-migrations
 - `dart analyze`: run static analysis
 - `dart test`: run test suite
 
+## 🚀 CI/CD (GitHub Actions)
+
+- **CI** (`.github/workflows/ci.yml`): on pull requests and pushes to `main`, runs format checks, analyzer, tests, Serverpod generation drift check, and Docker build validation.
+- **CD** (`.github/workflows/cd.yml`): on `main` and version tag pushes (`v*.*.*`), builds and publishes Docker images to `ghcr.io/<owner>/role-serverpod`.
+
 ## 🔧 Environment Variables
 
 - `RELAY_AUTH_TOKEN_SECRET`: signing/validation secret for access tokens

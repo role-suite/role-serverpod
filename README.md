@@ -101,8 +101,21 @@ dart bin/main.dart --apply-migrations
 
 ## 🚀 CI/CD (GitHub Actions)
 
-- **CI** (`.github/workflows/ci.yml`): on pull requests and pushes to `main`, runs format checks, analyzer, tests, Serverpod generation drift check, and Docker build validation.
+- **CI** (`.github/workflows/ci.yml`): on pull requests and pushes to `main`, runs format checks, analyzer, tests, and Docker build validation.
 - **CD** (`.github/workflows/cd.yml`): on `main` and version tag pushes (`v*.*.*`), builds and publishes Docker images to `ghcr.io/<owner>/role-serverpod`.
+
+### 🏷️ Release Versioning (Git Tags)
+
+- This project uses semantic version tags: `vMAJOR.MINOR.PATCH` (example: `v1.2.3`).
+- Tag pushes publish versioned Docker tags (`1.2.3`, `1.2`, `1`) to GHCR.
+- Default-branch pushes still publish `latest`.
+
+Example release:
+
+```bash
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
 
 ## 🔧 Environment Variables
 

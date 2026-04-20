@@ -66,7 +66,7 @@ dart bin/main.dart --apply-migrations
 
 This repository includes two GitHub Actions workflows:
 
-- `.github/workflows/ci.yml`: runs on pull requests and pushes to `main`; verifies formatting, analysis, tests, Serverpod code generation drift, and Docker build health.
+- `.github/workflows/ci.yml`: runs on pull requests and pushes to `main`; verifies formatting, analysis, tests, and Docker build health.
 - `.github/workflows/cd.yml`: runs on pushes to `main`, version tags (`v*.*.*`), or manual trigger; builds and publishes Docker images to GitHub Container Registry (`ghcr.io`).
 
 Published image name:
@@ -79,8 +79,25 @@ Tag strategy:
 
 - `latest` on default branch pushes
 - branch name tags (for branch pushes)
-- semantic version tags when pushing `v*.*.*`
+- semantic version tags when pushing `v*.*.*`:
+  - `v1.2.3` publishes image tags `1.2.3`, `1.2`, and `1`
 - commit SHA tag for traceability
+
+## Release Versioning via Git Tags
+
+Use semantic version tags to create official releases:
+
+```bash
+git checkout main
+git pull
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
+Notes:
+
+- Tag format must be `vMAJOR.MINOR.PATCH`.
+- Use patch (`x.y.z+1`) for fixes, minor (`x.y+1.0`) for backward-compatible features, major (`x+1.0.0`) for breaking changes.
 
 ### Required Repository Permissions
 

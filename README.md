@@ -155,6 +155,13 @@ Please report security vulnerabilities privately. Do not open public issues for 
 
 ## 🤝 Contributing
 
+Please review community and contribution guides before opening a PR:
+
+- `CONTRIBUTING.md`
+- `CODE_OF_CONDUCT.md`
+- `SECURITY.md`
+- `SUPPORT.md`
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/your-feature`)
 3. Commit your changes (`git commit -m "Add feature"`)

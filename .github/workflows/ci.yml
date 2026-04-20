@@ -27,16 +27,6 @@ jobs:
         with:
           sdk: 3.8.0
 
-      - name: Cache Dart dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-            relay_server_server/.dart_tool
-          key: ${{ runner.os }}-pub-${{ hashFiles('relay_server_server/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-
-
       - name: Install dependencies
         run: dart pub get
 

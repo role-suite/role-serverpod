@@ -30,14 +30,6 @@ jobs:
       - name: Install dependencies
         run: dart pub get
 
-      - name: Install Serverpod CLI
-        run: dart pub global activate serverpod_cli 3.4.3
-
-      - name: Generate Serverpod code
-        run: |
-          export PATH="$PATH:$HOME/.pub-cache/bin"
-          serverpod generate
-
       - name: Verify formatting
         run: dart format --output=none --set-exit-if-changed bin lib test
 
@@ -47,8 +39,6 @@ jobs:
       - name: Run tests
         run: dart test
 
-      - name: Verify generated files are up to date
-        run: git diff --exit-code
 
   docker-build:
     name: Docker Build

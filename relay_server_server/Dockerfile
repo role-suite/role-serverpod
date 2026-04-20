@@ -3,10 +3,8 @@ FROM dart:3.8.0 AS build
 WORKDIR /app
 COPY . .
 
-# Install dependencies, generate Serverpod code, and compile the server executable
+# Install dependencies and compile the server executable
 RUN dart pub get
-RUN dart pub global activate serverpod_cli 3.4.3
-RUN export PATH="$PATH:$HOME/.pub-cache/bin" && serverpod generate
 RUN dart compile exe bin/main.dart -o bin/server
 
 # Final stage
